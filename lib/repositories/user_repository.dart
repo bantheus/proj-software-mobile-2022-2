@@ -21,16 +21,19 @@ class UserRepository extends ChangeNotifier {
     notifyListeners();
   }
 
+  createUser(User user){
+    _users.add(user);
+    notifyListeners();
+  }
+
   loadUsers() {
     _users = [
       User(
-          id: 0,
           nome: 'Amanda Cristina',
           email: 'amanda@gmail.com',
           celular: '42995674122',
           senha: '123456'),
       User(
-          id: 1,
           nome: 'Amanda Cristina',
           email: 'amanda@gmail.com',
           celular: '42995674122',

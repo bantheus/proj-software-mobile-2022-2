@@ -1,5 +1,4 @@
 class User {
-  int id;
   String nome;
   String email;
   String celular;
@@ -7,7 +6,6 @@ class User {
   bool status; 
 
   User({
-    required this.id,
     required this.nome,
     required this.email,
     required this.celular,

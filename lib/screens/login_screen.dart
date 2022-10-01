@@ -28,7 +28,6 @@ class _LoginPageState extends State<LoginPage> {
           context,
           MaterialPageRoute(builder: (_) => HomePage(user: user)),
         );
-        
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Senha inválida")));
@@ -105,10 +104,13 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             validator: (value) {
-                              if (value!.isEmpty) {
+                               if (value!.isEmpty) {
                                 return 'Informe a senha';
                               }
-                              return null;
+                              if (value.length < 6) {
+                                return 'A senha deve ter no mínimo 6 caracteres';
+                              } else
+                                return null;
                             } //imput
                             ),
                         SizedBox(
