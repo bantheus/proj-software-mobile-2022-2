@@ -1,39 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:miaudote/models/pet.dart';
+import 'package:miaudote/models/user.dart';
 import 'package:miaudote/repositories/pet_repository.dart';
 import 'package:miaudote/widgets/pet_grid_view.dart';
 import 'package:miaudote/widgets/pet_image_card.dart';
+import 'package:miaudote/repositories/user_repository.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final User user;
+
+  const HomePage({super.key, required this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late final List<Pet> petList;
-
-  @override
-  void initState() {
-    super.initState();
-    petList = PetRepository().pets;
-  }
+  ValueNotifier<bool> showDescription = ValueNotifier(true);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('MIAUDOTE')),
+        title: Center(child: Text(widget.user.nome)),
       ),
-      body: PetsGridView(
-        pets: List.from(
-          petList.map(
-            (Pet pet) => PetImageCard(
-              image: pet.imagem,
-              nome: pet.nome,
-              idade: pet.idade.toString(),
-              onTap: () {},
+      body: Consumer<PetRepository>(
+        builder: (context, repository, _) => PetsGridView(
+          pets: List.from(
+            repository.pets.map(
+              (Pet pet) => PetImageCard(
+                image: pet.imagem,
+                nome: pet.nome,
+                idade: pet.idade.toString(),
+                onTap: () {},
+              ),
             ),
           ),
         ),

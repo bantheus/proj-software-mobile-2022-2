@@ -1,10 +1,20 @@
 import 'package:miaudote/models/pet.dart';
+import 'dart:collection';
+import 'package:collection/src/iterable_extensions.dart';
+import 'package:flutter/material.dart';
 
-class PetRepository {
-  List<Pet> pets = [];
+
+class PetRepository extends ChangeNotifier {
+  List<Pet> _pets = [];
+
+  UnmodifiableListView<Pet> get pets => UnmodifiableListView<Pet>(_pets);
 
   PetRepository() {
-    pets = [
+    loadPets();
+  }
+
+  loadPets() {
+    _pets = [
       Pet(
         id: 0,
         nome: "Caramelo",
@@ -22,5 +32,6 @@ class PetRepository {
         idade: 1,
       ),
     ];
+    notifyListeners();
   }
 }
