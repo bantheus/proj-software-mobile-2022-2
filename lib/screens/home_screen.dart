@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miaudote/models/pet.dart';
 import 'package:miaudote/repositories/pet_repository.dart';
+import 'package:miaudote/screens/pet_details_page.dart';
 import 'package:miaudote/widgets/pet_grid_view.dart';
 import 'package:miaudote/widgets/pet_image_card.dart';
 
@@ -20,6 +21,14 @@ class _HomePageState extends State<HomePage> {
     petList = PetRepository().pets;
   }
 
+  openDetails(Pet pet) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PetDetailsPage(pet: pet),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,10 +39,10 @@ class _HomePageState extends State<HomePage> {
         pets: List.from(
           petList.map(
             (Pet pet) => PetImageCard(
-              image: pet.imagem,
+              image: pet.imagem, 
               nome: pet.nome,
               idade: pet.idade.toString(),
-              onTap: () {},
+              onTap: () => openDetails(pet),
             ),
           ),
         ),
