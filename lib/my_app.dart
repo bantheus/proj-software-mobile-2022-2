@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:miaudote/screens/home_screen.dart';
+import 'package:miaudote/screens/login_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home:HomePage(),
+      home: const LoginPage(),
     );
   }
 }
