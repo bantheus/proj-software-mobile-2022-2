@@ -54,6 +54,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         reverse: true,
@@ -105,6 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         controller: _senha,
                         obscureText: true,
+
                         decoration: InputDecoration(
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 20.0),
@@ -126,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 40),
                       SizedBox(
-                        height: 40,
+                        height: 50,
                         child: ElevatedButton(
                           onPressed: () => validarForm(),
                           style: ButtonStyle(
@@ -143,6 +145,10 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text(
                               'Login',
                               textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -159,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: const Text(
                           'Ainda não tem conta? Cadastre-se agora.',
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(color: Colors.blue, fontSize: 16),
                         ),
                       ),
                     ],

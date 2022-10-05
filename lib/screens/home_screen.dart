@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text('MIAUDOTE')),
+        automaticallyImplyLeading: false,
       ),
       body: Consumer<PetRepository>(
         builder: (context, repository, _) => PetsGridView(
@@ -54,6 +55,40 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        color: Colors.blue,
+        child: IconTheme(
+          data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.home),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {},
+              ),
+              const SizedBox(width: 48),
+              IconButton(
+                icon: const Icon(Icons.favorite),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.person),
+                onPressed: () {},
+              ),
+            ],
           ),
         ),
       ),

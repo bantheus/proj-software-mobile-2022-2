@@ -208,7 +208,7 @@ class _CadastroPageState extends State<CadastroPage> {
                       ),
                       const SizedBox(height: 40),
                       SizedBox(
-                        height: 40,
+                        height: 50,
                         child: ElevatedButton(
                           onPressed: () => validarForm(),
                           style: ButtonStyle(
@@ -225,6 +225,9 @@ class _CadastroPageState extends State<CadastroPage> {
                             child: Text(
                               'Cadastrar',
                               textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                         ),
