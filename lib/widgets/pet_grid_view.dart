@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:miaudote/models/style-card.dart';
 
 class PetsGridView extends StatelessWidget {
   final List<Widget> pets;
+  final bool isBack;
 
   const PetsGridView({
     super.key,
     required this.pets,
+    required this.isBack,
   });
 
   @override
@@ -13,9 +16,9 @@ class PetsGridView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(12),
       child: GridView.count(
-        crossAxisSpacing: 24,
-        mainAxisSpacing: 24,
-        crossAxisCount: 1,
+        crossAxisCount: isBack ? 1 : 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
         children: pets,
       ),
     );

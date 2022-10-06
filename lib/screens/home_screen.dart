@@ -20,6 +20,8 @@ class _HomePageState extends State<HomePage> {
     petList = PetRepository().pets;
   }
 
+  bool gridOne = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,13 +29,19 @@ class _HomePageState extends State<HomePage> {
         title: const Center(child: Text('MIAUDOTE')),
       ),
       body: PetsGridView(
+        isBack: gridOne,
         pets: List.from(
           petList.map(
             (Pet pet) => PetImageCard(
               image: pet.imagem,
               nome: pet.nome,
               idade: pet.idade.toString(),
-              onTap: () {},
+              isBack: pet.styleCard.isBack,
+              onTap: () {
+                pet.styleCard.isBack = !pet.styleCard.isBack;
+                gridOne = pet.styleCard.isBack;
+                setState(() {});
+              },
             ),
           ),
         ),

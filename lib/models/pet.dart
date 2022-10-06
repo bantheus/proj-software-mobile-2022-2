@@ -1,3 +1,5 @@
+import 'package:miaudote/models/style-card.dart';
+
 class Pet {
   int id;
   String nome;
@@ -5,6 +7,7 @@ class Pet {
   List<String> sexo;
   List<String> especie;
   int idade;
+  StyleCard styleCard;
 
   Pet({
     required this.id,
@@ -13,5 +16,6 @@ class Pet {
     required this.sexo,
     required this.especie,
     required this.idade,
+    required this.styleCard,
   });
 }
