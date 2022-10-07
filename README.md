@@ -13,20 +13,37 @@ Os usuários se cadastram na plataforma e conseguem visualizar os animais dispon
 
 ## Cronograma
 
-|    DATA    |     DESCRIÇÃO     |
-| :--------: | :--------------- |
-| 01/09/2022 | Definição da aplicação |
-| 08/09/2022 | Desenvolvimento do login |
-| 09/09/2022 | Desenvolvimento do cadastro |
-| 19/09/2022 | Desenvolvimento da tela de animais |
+|    DATA    | DESCRIÇÃO                                     |
+| :--------: | :-------------------------------------------- |
+| 01/09/2022 | Definição da aplicação                        |
+| 08/09/2022 | Desenvolvimento do login                      |
+| 09/09/2022 | Desenvolvimento do cadastro                   |
+| 19/09/2022 | Desenvolvimento da tela de animais            |
 | 23/09/2022 | Desenvolvimento da tela de detalhes do animal |
-| 30/09/2022 | Refatoração do código |
+| 30/09/2022 | Refatoração do código                         |
 
 ## Equipe
 
 - Amanda Cristina Fraga de Albuquerque - 2257041
 - Matheus Augusto Schmidt Bento - 2065436
 - Marcos Correa Taborda da Silva - 1101099
+
+## Atividades realizadas por cada membro da equipe
+
+- Amanda Cristina Fraga de Albuquerque - 2257041
+
+  - Desenvolvimento do login
+  - Desenvolvimento do cadastro
+
+- Matheus Augusto Schmidt Bento - 2065436
+
+  - Desenvolvimento da tela de animais
+  - Desenvolvimento da tela de detalhes do animal
+
+- Marcos Correa Taborda da Silva - 1101099
+  
+  - Desenvolvimento da tela de animais
+  - Desenvolvimento da tela de detalhes do animal
 
 ## Entregas
 
