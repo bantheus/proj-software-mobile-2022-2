@@ -43,6 +43,18 @@ class UserRepository extends ChangeNotifier {
         celular: '15996916596',
         senha: '123456',
       ),
+      User(
+        nome: 'Marcos Correa',
+        email: 'marcos@gmail.com',
+        celular: '41996104989',
+        senha: '123456',
+      ),
+      User(
+        nome: 'Admin',
+        email: 'a@a.com',
+        celular: '42999999999',
+        senha: '123456',
+      ),
     ];
     notifyListeners();
   }
