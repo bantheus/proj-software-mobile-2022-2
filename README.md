@@ -12,7 +12,9 @@ O objetivo deste projeto é desenvolver um aplicativo de adoção de animais uti
 
 ## Equipe
 
+- Amanda Cristina Fraga de Albuquerque - 2257041
 - Matheus Augusto Schmidt Bento - 2065436
+- Marcos Correa Taborda da Silva - 1101099
 
 ## Entregas
 
