@@ -1,4 +1,4 @@
-# proj-software-mobile-2022-2
+# projeto dispositivos moveis e projeto de software
 
 ## Objetivo
 
@@ -41,7 +41,7 @@ Os usuários se cadastram na plataforma e conseguem visualizar os animais dispon
   - Desenvolvimento da tela de detalhes do animal
 
 - Marcos Correa Taborda da Silva - 1101099
-  
+
   - Desenvolvimento da tela de animais
   - Desenvolvimento da tela de detalhes do animal
 
