@@ -4,6 +4,8 @@ import 'package:miaudote/repositories/user_repository.dart';
 import 'package:miaudote/screens/cadastro_screen.dart';
 import 'package:miaudote/screens/home_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/src/iterable_extensions.dart';
+import 'package:email_validator/email_validator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -30,18 +32,11 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Senha inválida"),
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(feedbackSnackbar(text: "Senha inválida"));
+        
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Usuário não encontrado"),
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(feedbackSnackbar(text: "Usuário não encontrado"));
     }
   }
 
@@ -50,6 +45,18 @@ class _LoginPageState extends State<LoginPage> {
       autenticar();
     }
   }
+
+  feedbackSnackbar({text}) {
+  return SnackBar(
+    //backgroundColor: (Colors.black12),
+    content: Text(text),
+    duration: Duration(milliseconds: 3000),
+    action: SnackBarAction(
+      label: 'OK',
+      onPressed: () {},
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -79,29 +86,25 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       TextFormField(
-                        controller: _email,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 20.0),
-                          labelText: "E-mail",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                          controller: _email,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            labelText: "E-mail",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                        ),
-                        validator: (value) {
-                          String pattern =
-                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                          RegExp regExp = RegExp(pattern);
-                          if (value!.isEmpty) {
-                            return 'Informe o email';
-                          }
-                          if (!regExp.hasMatch(value)) {
-                            return "Email inválido";
-                          }
-                          return null;
-                        },
-                      ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Informe o email';
+                            }
+                            if (!EmailValidator.validate(value)) {
+                              return "Email inválido";
+                            }
+                            return null;
+                          }),
                       const SizedBox(height: 20),
                       TextFormField(
                         onFieldSubmitted: ((value) => validarForm()),
@@ -180,3 +183,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+
