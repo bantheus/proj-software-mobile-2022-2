@@ -36,4 +36,9 @@ class PetRepository extends ChangeNotifier {
     ];
     notifyListeners();
   }
+
+  createPet(Pet pet) {
+    _pets.add(pet);
+    notifyListeners();
+  }
 }

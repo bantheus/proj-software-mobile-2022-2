@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:miaudote/models/user.dart';
 import 'package:miaudote/models/pet.dart';
 import 'package:miaudote/repositories/pet_repository.dart';
+import 'package:miaudote/screens/cadastro_pet_screen.dart';
 import 'package:miaudote/screens/pet_details_page.dart';
 import 'package:miaudote/widgets/pet_grid_view.dart';
 import 'package:miaudote/widgets/pet_image_card.dart';
@@ -35,6 +36,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  openPetRegister() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const CadastroPetPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +67,9 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          openPetRegister();
+        },
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomAppBar(
