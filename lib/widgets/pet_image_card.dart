@@ -19,7 +19,7 @@ class PetImageCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
+      child: ListView(
         children: [
           Stack(
             children: [
@@ -38,7 +38,7 @@ class PetImageCard extends StatelessWidget {
                   nome,
                   style: const TextStyle(fontSize: 30),
                 ),
-                Text("$idade ANO"),
+                int.parse(idade) > 1 ? Text("$idade ANOS") : Text("$idade ANO"),
               ],
             ),
           ),

@@ -104,6 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
+                        onFieldSubmitted: ((value) => validarForm()),
                         controller: _senha,
                         obscureText: true,
 
