@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:miaudote/models/pet.dart';
-// import 'package:miaudote/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../repositories/pet_repository.dart';
@@ -35,10 +34,6 @@ class _CadastroPetPageState extends State<CadastroPetPage> {
         );
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Pet cadastrado com sucesso")));
-    // Navigator.push(
-    // context,
-    // MaterialPageRoute(builder: (_) => const HomePage()),
-    // );
   }
 
   validarForm() {
