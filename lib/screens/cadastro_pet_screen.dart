@@ -168,6 +168,21 @@ class _CadastroPetPageState extends State<CadastroPetPage> {
                       const SizedBox(
                         height: 20,
                       ),
+                      TextFormField(
+                        controller: _sexo,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 20.0),
+                          labelText: "Sexo",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
 
                       const SizedBox(height: 40),
                       SizedBox(
