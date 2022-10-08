@@ -159,16 +159,14 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                         ],
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 50),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: ButtonBar(
                         alignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                            //send a whatsapp message to the pet owner
                             onPressed: () {},
-
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.white,
                               backgroundColor: Colors.blue,
