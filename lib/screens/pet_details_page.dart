@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miaudote/models/pet.dart';
 
 class PetDetailsPage extends StatefulWidget {
@@ -63,13 +64,33 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                     Row(
                       children: [
                         const SizedBox(width: 10),
-                        Text(
-                          "Eu sou um ${widget.pet.especie[0]}",
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.grey,
+                        if (widget.pet.especie.toString() == '[Cachorro]') ...[
+                          const FaIcon(
+                            FontAwesomeIcons.dog,
+                            color: Colors.orange,
                           ),
-                        ),
+                          const SizedBox(width: 15),
+                          const Text(
+                            'Sou um cachorrinho',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ] else ...[
+                          const FaIcon(
+                            FontAwesomeIcons.cat,
+                            color: Colors.orange,
+                          ),
+                          const SizedBox(width: 15),
+                          const Text(
+                            'Eu sou um gatinho',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -77,14 +98,24 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                       children: [
                         const SizedBox(width: 10),
                         if (widget.pet.idade == 1) ...[
+                          const FaIcon(
+                            FontAwesomeIcons.cakeCandles,
+                            color: Colors.green,
+                          ),
+                          const SizedBox(width: 20),
                           const Text(
-                            "Tenho 1 ano",
+                            '1 ano',
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.grey,
                             ),
                           ),
                         ] else ...[
+                          const FaIcon(
+                            FontAwesomeIcons.cakeCandles,
+                            color: Colors.green,
+                          ),
+                          const SizedBox(width: 20),
                           Text(
                             "Tenho ${widget.pet.idade} anos",
                             style: const TextStyle(
@@ -99,13 +130,33 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                     Row(
                       children: [
                         const SizedBox(width: 10),
-                        Text(
-                          "E sou ${widget.pet.sexo[0]}",
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.grey,
+                        if (widget.pet.sexo.toString() == '[Macho]') ...[
+                          const FaIcon(
+                            FontAwesomeIcons.mars,
+                            color: Colors.blue,
                           ),
-                        ),
+                          const SizedBox(width: 20),
+                          const Text(
+                            'e sou macho',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ] else ...[
+                          const FaIcon(
+                            FontAwesomeIcons.venus,
+                            color: Colors.pink,
+                          ),
+                          const SizedBox(width: 20),
+                          const Text(
+                            'e sou fêmea',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                     const SizedBox(height: 20),
