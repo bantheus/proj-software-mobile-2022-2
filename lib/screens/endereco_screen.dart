@@ -1,56 +1,58 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:miaudote/screens/home_screen.dart';
 import 'package:miaudote/models/users.dart';
 import 'package:miaudote/screens/login_screen.dart';
+import 'package:miaudote/screens/perfil_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
 import '../repositories/user_repository.dart';
 import '../services/auth_service.dart';
 import '../widgets/auth_check.dart';
 
-class CadastroPage extends StatefulWidget {
-  const CadastroPage({Key? key}) : super(key: key);
+class EnderecoPage extends StatefulWidget {
+  UserRepository usuario;
+
+  EnderecoPage({required this.usuario});
 
   @override
-  State<CadastroPage> createState() => _CadastroPageState();
+  State<EnderecoPage> createState() => _EnderecoPageState();
 }
 
-class _CadastroPageState extends State<CadastroPage> {
+class _EnderecoPageState extends State<EnderecoPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nome = TextEditingController();
-  final _email = TextEditingController();
-  final _celular = TextEditingController();
-  final _senha = TextEditingController();
+  final _cidade = TextEditingController();
+  final _estado = TextEditingController();
+  final _rua = TextEditingController();
+  final _numero = TextEditingController();
 
   bool loading = false; //feedback enquanto carrega
 
-  cadastrar() async {
+  atualizar() async {
     try {
       setState(() => loading = true);
-      await context.read<AuthService>().cadastrar(_email.text, _senha.text);
-      await context.read<UserRepository>().createUser(
-            Users(
-              nome: _nome.text,
-              email: _email.text,
-              celular: _celular.text,
-            ),
-          );
+      //Users? usuario = context.read<UserRepository>().user;
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const AuthCheck()),
-      );
-    } on AuthException catch (e) {
+      // widget.usuario.user?.estado = _estado.text;
+      // widget.usuario.user?.cidade = _cidade.text;
+      // widget.usuario.user?.rua = _rua.text;
+      // widget.usuario.user?.numero = _numero.text;
+      // context
+      //     .read<UserRepository>()
+      //     .updateUser(_estado.text, _cidade.text, _rua.text, _numero.text);
+      await widget.usuario
+          .updateUser(_estado.text, _cidade.text, _rua.text, _numero.text);
       setState(() => loading = false);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(feedbackSnackbar(text: e.message));
+    } on Exception catch (e) {
+      setState(() => loading = false);
+      ScaffoldMessenger.of(context).showSnackBar(feedbackSnackbar(text: e));
     }
   }
 
   validarForm() {
     if (_formKey.currentState!.validate()) {
-      cadastrar();
+      atualizar();
     }
   }
 
@@ -96,20 +98,10 @@ class _CadastroPageState extends State<CadastroPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const Text(
-                      "Cadastre-se",
+                      "Endereço",
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "Encontre um novo amigo",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey[700],
                       ),
                     ),
                     const SizedBox(
@@ -126,19 +118,19 @@ class _CadastroPageState extends State<CadastroPage> {
                   child: Column(
                     children: [
                       TextFormField(
-                        controller: _nome,
+                        controller: _estado,
                         keyboardType: TextInputType.name,
                         decoration: InputDecoration(
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 20.0),
-                          labelText: "Nome",
+                          labelText: "Estado",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Informe o seu Nome';
+                            return 'Informe o Estado';
                           }
                           return null;
                         }, //imput
@@ -148,23 +140,21 @@ class _CadastroPageState extends State<CadastroPage> {
                       ),
 
                       TextFormField(
-                          controller: _email,
-                          keyboardType: TextInputType.emailAddress,
+                          controller: _cidade,
+                          keyboardType: TextInputType.name,
                           decoration: InputDecoration(
                             contentPadding:
                                 const EdgeInsets.symmetric(horizontal: 20.0),
-                            labelText: "E-mail",
+                            labelText: "Cidade",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Informe o email';
+                              return 'Informe a Cidade';
                             }
-                            if (!EmailValidator.validate(value)) {
-                              return "Email inválido";
-                            }
+
                             return null;
                           }),
 
@@ -173,25 +163,21 @@ class _CadastroPageState extends State<CadastroPage> {
                       ),
 
                       TextFormField(
-                        controller: _celular,
-                        keyboardType: TextInputType.number,
+                        controller: _rua,
+                        keyboardType: TextInputType.name,
                         decoration: InputDecoration(
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 20.0),
-                          labelText: "Celular",
+                          labelText: "Rua",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                         validator: (value) {
-                          String mask = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                          RegExp regExp = RegExp(mask);
                           if (value!.isEmpty) {
-                            return 'Informe o Celular';
+                            return 'Informe a rua';
                           }
-                          if (!regExp.hasMatch(value)) {
-                            return "Celular inválido";
-                          }
+
                           return null;
                         },
                       ), //Imput Celular
@@ -199,25 +185,21 @@ class _CadastroPageState extends State<CadastroPage> {
                         height: 20,
                       ),
                       TextFormField(
-                        controller: _senha,
-                        obscureText: true,
+                        controller: _numero,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 20.0),
-                          labelText: "Senha",
+                          labelText: "Numero",
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Informe a senha';
+                            return 'Informe o numero da residência';
                           }
-                          if (value.length < 6) {
-                            return 'A senha deve ter no mínimo 6 caracteres';
-                          } else {
-                            return null;
-                          }
+                          return null;
                         }, //imput
                       ),
                       const SizedBox(height: 40),
@@ -253,7 +235,7 @@ class _CadastroPageState extends State<CadastroPage> {
                                     Padding(
                                       padding: EdgeInsets.all(10),
                                       child: Text(
-                                        "Cadastrar",
+                                        "Atualizar",
                                         style: TextStyle(fontSize: 20),
                                       ),
                                     ),

@@ -1,17 +1,24 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:miaudote/models/user.dart';
+//import 'package:miaudote/models/user.dart';
 import 'package:miaudote/models/pet.dart';
 import 'package:miaudote/repositories/pet_repository.dart';
+import 'package:miaudote/repositories/user_repository.dart';
 import 'package:miaudote/screens/cadastro_pet_screen.dart';
+import 'package:miaudote/screens/perfil_screen.dart';
 import 'package:miaudote/screens/pet_details_page.dart';
 import 'package:miaudote/widgets/pet_grid_view.dart';
 import 'package:miaudote/widgets/pet_image_card.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  final User user;
+import '../models/users.dart';
+import '../services/auth_service.dart';
 
-  const HomePage({super.key, required this.user});
+class HomePage extends StatefulWidget {
+  //Users? usuario;
+  UserRepository usuario;
+  HomePage({required this.usuario});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -21,10 +28,11 @@ class _HomePageState extends State<HomePage> {
   late final List<Pet> petList;
 
   @override
-  void initState() {
-    super.initState();
-    petList = PetRepository().pets;
-  }
+  // void initState() {
+  //   super.initState();
+  //   petList = PetRepository().pets;
+
+  // }
 
   ValueNotifier<bool> showDescription = ValueNotifier(true);
 
@@ -65,13 +73,13 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          openPetRegister();
-        },
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     openPetRegister();
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         color: Colors.blue,
@@ -81,21 +89,28 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.home),
-                onPressed: () {},
+                icon: const Icon(Icons.logout),
+                onPressed: () => context.read<AuthService>().logout(),
               ),
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {},
-              ),
-              const SizedBox(width: 48),
+              // IconButton(
+              //   icon: const Icon(Icons.search),
+              //   onPressed: () {},
+              // ),
+              // //const SizedBox(width: 48),
               IconButton(
                 icon: const Icon(Icons.favorite),
                 onPressed: () {},
               ),
               IconButton(
                 icon: const Icon(Icons.person),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        //usuario: widget.usuario
+                        builder: (_) => PerfilPage(usuario: widget.usuario)),
+                  );
+                },
               ),
             ],
           ),

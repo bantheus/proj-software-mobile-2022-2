@@ -168,7 +168,7 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                           TextButton(
                             onPressed: () {},
                             style: TextButton.styleFrom(
-                              foregroundColor: Colors.white,
+                              //foregroundColor: Colors.white,
                               backgroundColor: Colors.blue,
                               minimumSize: const Size(500, 50),
                             ),

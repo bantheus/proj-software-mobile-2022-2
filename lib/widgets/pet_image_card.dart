@@ -50,7 +50,7 @@ class PetImageCard extends StatelessWidget {
                 TextButton(
                   onPressed: onTap,
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
+                    //foregroundColor: Colors.white,
                     backgroundColor: Colors.blue,
                   ),
                   child: const Text("Mais informações"),
