@@ -1,61 +1,70 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'dart:collection';
 // ignore: implementation_imports
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/src/iterable_extensions.dart';
 
 import 'package:flutter/material.dart';
-import 'package:miaudote/models/user.dart';
+import 'package:miaudote/models/users.dart';
+
+import '../database/db_firestore.dart';
+import '../services/auth_service.dart';
 
 class UserRepository extends ChangeNotifier {
-  List<User> _users = [];
+  late FirebaseFirestore db;
+  late AuthService auth;
+  Users? user;
 
-  UnmodifiableListView<User> get users => UnmodifiableListView<User>(_users);
+  // UnmodifiableListView<User> get users => UnmodifiableListView<User>(_users);
 
-  UserRepository() {
-    loadUsers();
+  UserRepository({required this.auth}) {
+    loadUser();
   }
 
-  User? findUser(String email) =>
-      _users.firstWhereOrNull((user) => user.email == email);
+  // User? findUser(String email) =>
+  //     _users.firstWhereOrNull((user) => user.email == email);
 
-  setStatus(User user) {
-    user.status = true;
+  createUser(Users user) async {
+    await db.collection('usuarios').doc(auth.usuario!.uid).set({
+      'nome': user.nome,
+      'email': user.email,
+      'celular': user.celular,
+      'foto': user.foto,
+      'estado': user.estado,
+      'cidade': user.cidade,
+      'rua': user.rua,
+      'numero': user.numero
+    });
     notifyListeners();
   }
 
-  createUser(User user) {
-    _users.add(user);
+  updateUser(String estado, String cidade, String rua, String numero) async {
+    await db.collection('usuarios').doc(auth.usuario!.uid).update(
+        {'estado': estado, 'cidade': cidade, 'rua': rua, 'numero': numero});
     notifyListeners();
   }
 
-  loadUsers() {
-    _users = [
-      User(
-        nome: 'Amanda Cristina',
-        email: 'amanda@gmail.com',
-        celular: '42995674122',
-        senha: '123456',
-      ),
-      User(
-        nome: 'Matheus Schmidt',
-        email: 'matheus@gmail.com',
-        celular: '15996916596',
-        senha: '123456',
-      ),
-      User(
-        nome: 'Marcos Correa',
-        email: 'marcos@gmail.com',
-        celular: '41996104989',
-        senha: '123456',
-      ),
-      User(
-        nome: 'Admin',
-        email: 'a@a.com',
-        celular: '42999999999',
-        senha: '123456',
-      ),
-    ];
-    notifyListeners();
+  findUser() async {
+    if (auth.usuario != null) {
+      final snapshot =
+          await db.collection('usuarios').doc(auth.usuario!.uid).get();
+
+      if (snapshot != null) {
+        user = Users(
+            nome: snapshot.get('nome'),
+            email: snapshot.get('email'),
+            celular: snapshot.get('celular'));
+      }
+
+      notifyListeners();
+    }
+  }
+
+  loadUser() async {
+    await _startFirestore();
+    await findUser();
+  }
+
+  _startFirestore() {
+    db = DBFirestore.get();
   }
 }
