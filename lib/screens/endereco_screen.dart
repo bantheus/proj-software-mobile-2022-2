@@ -12,9 +12,7 @@ import '../services/auth_service.dart';
 import '../widgets/auth_check.dart';
 
 class EnderecoPage extends StatefulWidget {
-  UserRepository usuario;
-
-  EnderecoPage({required this.usuario});
+  EnderecoPage();
 
   @override
   State<EnderecoPage> createState() => _EnderecoPageState();
@@ -32,7 +30,7 @@ class _EnderecoPageState extends State<EnderecoPage> {
   atualizar() async {
     try {
       setState(() => loading = true);
-      //Users? usuario = context.read<UserRepository>().user;
+      //Users usuario = context.read<UserRepository>().user;
 
       // widget.usuario.user?.estado = _estado.text;
       // widget.usuario.user?.cidade = _cidade.text;
@@ -41,9 +39,11 @@ class _EnderecoPageState extends State<EnderecoPage> {
       // context
       //     .read<UserRepository>()
       //     .updateUser(_estado.text, _cidade.text, _rua.text, _numero.text);
-      await widget.usuario
+      await context
+          .read<UserRepository>()
           .updateUser(_estado.text, _cidade.text, _rua.text, _numero.text);
       setState(() => loading = false);
+      Navigator.pop(context);
     } on Exception catch (e) {
       setState(() => loading = false);
       ScaffoldMessenger.of(context).showSnackBar(feedbackSnackbar(text: e));

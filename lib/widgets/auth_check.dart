@@ -30,9 +30,9 @@ class _AuthCheckState extends State<AuthCheck> {
     else if (auth.usuario == null) {
       return const LoginPage();
     } else {
-      UserRepository repoUser = UserRepository(auth: auth);
+      //UserRepository repoUser = UserRepository(auth: auth);
 
-      return HomePage(usuario: repoUser);
+      return HomePage();
     }
   }
 

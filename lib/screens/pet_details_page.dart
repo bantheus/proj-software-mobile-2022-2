@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miaudote/models/pet.dart';
+import 'package:miaudote/repositories/pet_repository.dart';
+import 'package:miaudote/screens/cadastro_pet_screen.dart';
+import 'package:miaudote/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 class PetDetailsPage extends StatefulWidget {
   final Pet pet;
@@ -12,6 +16,33 @@ class PetDetailsPage extends StatefulWidget {
 }
 
 class _PetDetailsPageState extends State<PetDetailsPage> {
+  bool loading = false; //feedback enquanto carrega
+  alterarStatus() async {
+    try {
+      setState(() => loading = true);
+      await context.read<PetRepository>().changeStatus(widget.pet.id);
+      setState(() => loading = false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(feedbackSnackbar(text: "Pet adotado com sucesso"));
+    } on AuthException catch (e) {
+      setState(() => loading = false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(feedbackSnackbar(text: e.message));
+    }
+  }
+
+  feedbackSnackbar({text}) {
+    return SnackBar(
+      //behavior: SnackBarBehavior.floating,
+      content: Text(text),
+      duration: Duration(milliseconds: 3000),
+      action: SnackBarAction(
+        label: 'OK',
+        onPressed: () {},
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +95,7 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                     Row(
                       children: [
                         const SizedBox(width: 10),
-                        if (widget.pet.especie.toString() == '[Cachorro]') ...[
+                        if (widget.pet.especie.toString() == 'cachorro') ...[
                           const FaIcon(
                             FontAwesomeIcons.dog,
                             color: Colors.orange,
@@ -130,7 +161,7 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                     Row(
                       children: [
                         const SizedBox(width: 10),
-                        if (widget.pet.sexo.toString() == '[Macho]') ...[
+                        if (widget.pet.sexo.toString() == 'macho') ...[
                           const FaIcon(
                             FontAwesomeIcons.mars,
                             color: Colors.blue,
@@ -166,14 +197,16 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                         alignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              alterarStatus();
+                            },
                             style: TextButton.styleFrom(
                               //foregroundColor: Colors.white,
                               backgroundColor: Colors.blue,
                               minimumSize: const Size(500, 50),
                             ),
                             child: const Text(
-                              "Adotar",
+                              "Atualizar",
                               style: TextStyle(fontSize: 20),
                             ),
                           ),
