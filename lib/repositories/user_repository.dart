@@ -12,7 +12,7 @@ import '../services/auth_service.dart';
 class UserRepository extends ChangeNotifier {
   late FirebaseFirestore db;
   late AuthService auth;
-  Users? user;
+  late Users user;
 
   // UnmodifiableListView<User> get users => UnmodifiableListView<User>(_users);
 
@@ -53,15 +53,16 @@ class UserRepository extends ChangeNotifier {
             nome: snapshot.get('nome'),
             email: snapshot.get('email'),
             celular: snapshot.get('celular'));
+        notifyListeners();
+        return user;
       }
-
-      notifyListeners();
+      return null;
     }
+    return null;
   }
 
   loadUser() async {
     await _startFirestore();
-    await findUser();
   }
 
   _startFirestore() {

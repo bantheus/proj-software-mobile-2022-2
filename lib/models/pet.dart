@@ -1,11 +1,14 @@
 class Pet {
-  int id;
+  String id;
   String nome;
   String imagem;
   String descricao;
-  List<String> sexo;
-  List<String> especie;
+  String sexo;
+  String especie;
   int idade;
+  String dataEntrada;
+  String dataAdocao;
+  int status;
 
   Pet({
     required this.id,
@@ -15,5 +18,8 @@ class Pet {
     required this.sexo,
     required this.especie,
     required this.idade,
+    required this.dataEntrada,
+    required this.dataAdocao,
+    required this.status
   });
 }

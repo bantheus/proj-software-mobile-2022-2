@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:miaudote/models/pet.dart';
+import 'package:miaudote/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 import '../repositories/pet_repository.dart';
@@ -14,26 +15,57 @@ class CadastroPetPage extends StatefulWidget {
 
 class _CadastroPetPageState extends State<CadastroPetPage> {
   final _formKey = GlobalKey<FormState>();
+  final _id = TextEditingController();
   final _nome = TextEditingController();
   final _especie = TextEditingController();
   final _descricao = TextEditingController();
   final _sexo = TextEditingController();
   final _idade = TextEditingController();
+  final _status = TextEditingController();
 
-  cadastrar() {
-    context.read<PetRepository>().createPet(
-          Pet(
-            id: 0,
-            nome: _nome.text,
-            imagem: "images/caramelo.jpg",
-            descricao: _descricao.text,
-            sexo: [_sexo.text],
-            especie: [_especie.text],
-            idade: int.parse(_idade.text),
-          ),
-        );
-    ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Pet cadastrado com sucesso")));
+  bool loading = false; //feedback enquanto carrega
+
+  cadastrar() async {
+    try {
+      setState(() => loading = true);
+      final success = await context.read<PetRepository>().createPet(Pet(
+          id: _id.text,
+          nome: _nome.text,
+          imagem: "images/caramelo.jpg",
+          descricao: _descricao.text,
+          sexo: _sexo.text,
+          especie: _especie.text,
+          idade: int.parse(_idade.text),
+          dataAdocao: "3000-10-11",
+          dataEntrada: DateTime.now().toString(),
+          status: int.parse(_status.text)));
+      setState(() => loading = false);
+
+      if (success && mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(feedbackSnackbar(text: "Pet cadastrado com sucesso"));
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(feedbackSnackbar(
+            text: "Este Pet já está cadastrado. Tente novamente"));
+      }
+    } on AuthException catch (e) {
+      setState(() => loading = false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(feedbackSnackbar(text: e.message));
+    }
+  }
+
+  feedbackSnackbar({text}) {
+    return SnackBar(
+      //behavior: SnackBarBehavior.floating,
+      content: Text(text),
+      duration: Duration(milliseconds: 3000),
+      action: SnackBarAction(
+        label: 'OK',
+        onPressed: () {},
+      ),
+    );
   }
 
   validarForm() {
@@ -78,19 +110,6 @@ class _CadastroPetPageState extends State<CadastroPetPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "O animalzinho vai adorar ser adotado!",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
                   ],
                 ),
               ),
@@ -101,6 +120,28 @@ class _CadastroPetPageState extends State<CadastroPetPage> {
                   key: _formKey,
                   child: Column(
                     children: [
+                      //id
+                      TextFormField(
+                        controller: _id,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 20.0),
+                          labelText: "ID",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Informe o ID';
+                          }
+                          return null;
+                        }, //imput
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       //nome
                       TextFormField(
                         controller: _nome,
@@ -183,6 +224,28 @@ class _CadastroPetPageState extends State<CadastroPetPage> {
                       const SizedBox(
                         height: 20,
                       ),
+                      //nome
+                      TextFormField(
+                        controller: _status,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 20.0),
+                          labelText: "Status",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Informe situação';
+                          }
+                          return null;
+                        }, //imput
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
 
                       const SizedBox(height: 40),
                       SizedBox(
@@ -198,15 +261,30 @@ class _CadastroPetPageState extends State<CadastroPetPage> {
                               ),
                             ),
                           ),
-                          child: const SizedBox(
-                            width: double.infinity,
-                            child: Text(
-                              'Cadastrar Pet',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: (loading)
+                                ? [
+                                    Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: SizedBox(
+                                        //width: double.infinity,
+                                        //height: 24,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  ]
+                                : [
+                                    Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Text(
+                                        "Cadastrar",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                  ],
                           ),
                         ),
                       ),

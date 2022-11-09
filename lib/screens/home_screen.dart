@@ -8,6 +8,7 @@ import 'package:miaudote/repositories/user_repository.dart';
 import 'package:miaudote/screens/cadastro_pet_screen.dart';
 import 'package:miaudote/screens/perfil_screen.dart';
 import 'package:miaudote/screens/pet_details_page.dart';
+import 'package:miaudote/screens/report_screen.dart';
 import 'package:miaudote/widgets/pet_grid_view.dart';
 import 'package:miaudote/widgets/pet_image_card.dart';
 import 'package:provider/provider.dart';
@@ -17,15 +18,15 @@ import '../services/auth_service.dart';
 
 class HomePage extends StatefulWidget {
   //Users? usuario;
-  UserRepository usuario;
-  HomePage({required this.usuario});
+  //UserRepository usuario;
+  HomePage();
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late final List<Pet> petList;
+  //late final List<Pet> petList;
 
   @override
   // void initState() {
@@ -58,20 +59,24 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,
       ),
       body: Consumer<PetRepository>(
-        builder: (context, repository, _) => PetsGridView(
-          pets: List.from(
-            repository.pets.map(
-              (Pet pet) => PetImageCard(
-                image: pet.imagem,
-                nome: pet.nome,
-                idade: pet.idade.toString(),
-                onTap: () {
-                  openDetails(pet);
-                },
+        builder: (context, repository, _) => repository.pets.isEmpty
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : PetsGridView(
+                pets: List.from(
+                  repository.pets.map(
+                    (Pet pet) => PetImageCard(
+                      image: pet.imagem,
+                      nome: pet.nome,
+                      idade: pet.idade.toString(),
+                      onTap: () {
+                        openDetails(pet);
+                      },
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       // floatingActionButton: FloatingActionButton(
@@ -98,8 +103,14 @@ class _HomePageState extends State<HomePage> {
               // ),
               // //const SizedBox(width: 48),
               IconButton(
-                icon: const Icon(Icons.favorite),
-                onPressed: () {},
+                icon: const Icon(Icons.multiline_chart),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          //usuario: widget.usuario
+                          builder: (_) => ReportPage()));
+                },
               ),
               IconButton(
                 icon: const Icon(Icons.person),
@@ -108,13 +119,19 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                         //usuario: widget.usuario
-                        builder: (_) => PerfilPage(usuario: widget.usuario)),
+                        builder: (_) => PerfilPage()),
                   );
                 },
               ),
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          openPetRegister();
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
