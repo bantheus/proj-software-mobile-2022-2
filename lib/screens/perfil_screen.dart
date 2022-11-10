@@ -18,8 +18,6 @@ import '../repositories/user_repository.dart';
 import '../services/auth_service.dart';
 
 class PerfilPage extends StatefulWidget {
-  
-
   PerfilPage();
 
   @override
@@ -59,6 +57,7 @@ class _PerfilPageState extends State<PerfilPage> {
         onPressed: () {},
       ),
     );
+  }
 
   XFile? imageFile;
 
@@ -68,14 +67,12 @@ class _PerfilPageState extends State<PerfilPage> {
     try {
       XFile? file = await picker.pickImage(source: ImageSource.gallery);
       if (file != null) setState(() => imageFile = file);
-      
     } catch (e) {
       print(e);
     }
   }
 
   _abrirCamera() async {
-    
     final picker = ImagePicker();
 
     try {
@@ -114,7 +111,6 @@ class _PerfilPageState extends State<PerfilPage> {
             ),
           );
         });
-
   }
 
   @override
@@ -140,7 +136,6 @@ class _PerfilPageState extends State<PerfilPage> {
       body: SingleChildScrollView(
         reverse: true,
         child: Center(
-
           child: ValueListenableBuilder(
               valueListenable: loading,
               builder: (context, bool isLoading, _) {
@@ -154,52 +149,48 @@ class _PerfilPageState extends State<PerfilPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 120.0),
                       child: SizedBox(
-                        width: 250,
-                        height: 150,
-                                       child: Stack(
-                      clipBehavior: Clip.none,
-                      fit: StackFit.expand,
-                      children: [
-                        CircleAvatar(
-                          child: ClipOval(
-                              child: imageFile != null
-                                  ? Image.file(File(imageFile!.path))
-                                  : null),
-                          radius: 10,
-                        ),
-                        Positioned(
-                          right: 30,
-                          bottom: 0,
-                          child: SizedBox(
-                            height: 46,
-                            width: 46,
-                             child: TextButton (
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  side: BorderSide(color: Colors.white),
-                                ),
+                          width: 250,
+                          height: 150,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            fit: StackFit.expand,
+                            children: [
+                              CircleAvatar(
+                                child: ClipOval(
+                                    child: imageFile != null
+                                        ? Image.file(File(imageFile!.path))
+                                        : null),
+                                radius: 10,
                               ),
-                              onPressed: () {
-                                _escolha(context);
-                              },
-                              child: Icon(Icons.camera_alt_outlined),
-                             
-                          ),
-                        )
-                        )
-                      ],
-                    )),
-
-
-              ),
-              
-              Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 20,
-                    horizontal: 30,
-                  ),
+                              Positioned(
+                                  right: 30,
+                                  bottom: 0,
+                                  child: SizedBox(
+                                    height: 46,
+                                    width: 46,
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        padding: EdgeInsets.zero,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          side: BorderSide(color: Colors.white),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        _escolha(context);
+                                      },
+                                      child: Icon(Icons.camera_alt_outlined),
+                                    ),
+                                  ))
+                            ],
+                          )),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 30,
+                        ),
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
