@@ -23,8 +23,7 @@ class PetImageCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: ListView(
-        physics: NeverScrollableScrollPhysics(),
-        // on: onTap,
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           Stack(
             children: [
