@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:miaudote/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 class PetImageCard extends StatelessWidget {
   final String image;
@@ -14,12 +16,15 @@ class PetImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthService auth = Provider.of<AuthService>(context);
     return Card(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       child: ListView(
+        physics: NeverScrollableScrollPhysics(),
+        // on: onTap,
         children: [
           Stack(
             children: [
@@ -50,10 +55,12 @@ class PetImageCard extends StatelessWidget {
                 TextButton(
                   onPressed: onTap,
                   style: TextButton.styleFrom(
-                    //foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.indigo,
                   ),
-                  child: const Text("Mais informações"),
+                  child: Text(auth.usuario?.email == 'admin@admin.com'
+                      ? 'Editar'
+                      : 'Mais informações'),
                 ),
               ],
             ),
