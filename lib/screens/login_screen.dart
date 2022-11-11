@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () => validarForm(),
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.red),
+                                MaterialStateProperty.all<Color>(Colors.indigo),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),

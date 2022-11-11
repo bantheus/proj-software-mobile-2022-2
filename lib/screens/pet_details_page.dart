@@ -50,7 +50,17 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
       appBar: AppBar(
         title: Text(widget.pet.nome),
         elevation: 0,
-        backgroundColor: Colors.black45,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
       ),
       body: Stack(
@@ -95,7 +105,8 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                     Row(
                       children: [
                         const SizedBox(width: 10),
-                        if (widget.pet.especie.toString() == 'cachorro') ...[
+                        if (widget.pet.especie.toString().toLowerCase() ==
+                            'cachorro') ...[
                           const FaIcon(
                             FontAwesomeIcons.dog,
                             color: Colors.orange,
@@ -201,12 +212,12 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                               alterarStatus();
                             },
                             style: TextButton.styleFrom(
-                              //foregroundColor: Colors.white,
-                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.indigo,
                               minimumSize: const Size(500, 50),
                             ),
                             child: const Text(
-                              "Atualizar",
+                              "Adotar",
                               style: TextStyle(fontSize: 20),
                             ),
                           ),

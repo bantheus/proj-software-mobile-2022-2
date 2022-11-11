@@ -227,7 +227,7 @@ class _CadastroPageState extends State<CadastroPage> {
                           onPressed: () => validarForm(),
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.red),
+                                MaterialStateProperty.all<Color>(Colors.indigo),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),

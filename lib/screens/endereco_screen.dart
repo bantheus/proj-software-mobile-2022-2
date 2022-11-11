@@ -96,6 +96,7 @@ class _EnderecoPageState extends State<EnderecoPage> {
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  // ignore: prefer_const_literals_to_create_immutables
                   children: [
                     const Text(
                       "Endereço",
@@ -209,7 +210,7 @@ class _EnderecoPageState extends State<EnderecoPage> {
                           onPressed: () => validarForm(),
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.red),
+                                MaterialStateProperty.all<Color>(Colors.indigo),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -220,7 +221,7 @@ class _EnderecoPageState extends State<EnderecoPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: (loading)
                                 ? [
-                                    Padding(
+                                    const Padding(
                                       padding: EdgeInsets.all(10),
                                       child: SizedBox(
                                         //width: double.infinity,
@@ -232,7 +233,7 @@ class _EnderecoPageState extends State<EnderecoPage> {
                                     )
                                   ]
                                 : [
-                                    Padding(
+                                    const Padding(
                                       padding: EdgeInsets.all(10),
                                       child: Text(
                                         "Atualizar",
