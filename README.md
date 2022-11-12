@@ -55,6 +55,10 @@ Os usuários se cadastram na plataforma e conseguem visualizar os animais dispon
 
   - Desenvolvimento da tela de animais
   - Desenvolvimento da tela de detalhes do animal
+  - Desenvolvimento dos filtros dos animais na página inicial
+  - Desenvolvimento de imagens randomicas para cadastro de animais
+  - Ajustes de layoults e temas
+  - Desenvolvimento do cadastro de animais
 
 ## Entregas
 
