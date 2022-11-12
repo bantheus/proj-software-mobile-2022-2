@@ -1,15 +1,25 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miaudote/models/pet.dart';
+import 'package:miaudote/models/users.dart';
 import 'package:miaudote/repositories/pet_repository.dart';
-import 'package:miaudote/screens/cadastro_pet_screen.dart';
 import 'package:miaudote/services/auth_service.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class PetDetailsPage extends StatefulWidget {
   final Pet pet;
 
-  const PetDetailsPage({super.key, required this.pet});
+  const PetDetailsPage({
+    Key? key,
+    required this.pet,
+  }) : super(key: key);
 
   @override
   State<PetDetailsPage> createState() => _PetDetailsPageState();
@@ -43,6 +53,15 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
     );
   }
 
+  openWhatsApp({nome, pet}) async {
+    var number = "5515996916596";
+    var whatsappUrl =
+        "https://wa.me/$number?text=Olá, me chamo $nome e gostaria de adotar o pet $pet";
+    await launch(whatsappUrl)
+        ? launch(whatsappUrl)
+        : print("Não foi possível abrir o WhatsApp");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +69,17 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
       appBar: AppBar(
         title: Text(widget.pet.nome),
         elevation: 0,
-        backgroundColor: Colors.black45,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
       ),
       body: Stack(
@@ -95,7 +124,8 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                     Row(
                       children: [
                         const SizedBox(width: 10),
-                        if (widget.pet.especie.toString() == 'cachorro') ...[
+                        if (widget.pet.especie.toString().toLowerCase() ==
+                            'cachorro') ...[
                           const FaIcon(
                             FontAwesomeIcons.dog,
                             color: Colors.orange,
@@ -199,14 +229,16 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                           TextButton(
                             onPressed: () {
                               alterarStatus();
+                              openWhatsApp(
+                                  nome: 'userName', pet: widget.pet.nome);
                             },
                             style: TextButton.styleFrom(
-                              //foregroundColor: Colors.white,
-                              backgroundColor: Colors.blue,
+                              backgroundColor: Colors.indigo,
+                              primary: Colors.white,
                               minimumSize: const Size(500, 50),
                             ),
                             child: const Text(
-                              "Atualizar",
+                              "Adotar",
                               style: TextStyle(fontSize: 20),
                             ),
                           ),

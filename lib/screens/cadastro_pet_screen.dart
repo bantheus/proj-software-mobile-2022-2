@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:miaudote/models/pet.dart';
@@ -24,19 +26,22 @@ class _CadastroPetPageState extends State<CadastroPetPage> {
   final _status = TextEditingController();
 
   bool loading = false; //feedback enquanto carrega
+  Random random = Random();
 
   cadastrar() async {
     try {
+      int id = random.nextInt(3) + 1;
       setState(() => loading = true);
       final success = await context.read<PetRepository>().createPet(Pet(
           id: _id.text,
           nome: _nome.text,
-          imagem: "images/caramelo.jpg",
+          imagem:
+              'images/${_especie.text.toLowerCase().contains('cac') ? 'cachorro$id' : 'gato$id'}.jpg',
           descricao: _descricao.text,
           sexo: _sexo.text,
           especie: _especie.text,
           idade: int.parse(_idade.text),
-          dataAdocao: "3000-10-11",
+          dataAdocao: "3000-10-12",
           dataEntrada: DateTime.now().toString(),
           status: int.parse(_status.text)));
       setState(() => loading = false);
@@ -254,7 +259,7 @@ class _CadastroPetPageState extends State<CadastroPetPage> {
                           onPressed: () => validarForm(),
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.red),
+                                MaterialStateProperty.all<Color>(Colors.indigo),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
