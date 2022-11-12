@@ -54,8 +54,8 @@ class PetImageCard extends StatelessWidget {
                 TextButton(
                   onPressed: onTap,
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
                     backgroundColor: Colors.indigo,
+                    primary: Colors.white,
                   ),
                   child: Text(auth.usuario?.email == 'admin@admin.com'
                       ? 'Editar'

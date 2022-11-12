@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //import 'package:miaudote/models/user.dart';
@@ -18,7 +19,6 @@ import '../models/users.dart';
 import '../services/auth_service.dart';
 
 class HomePage extends StatefulWidget {
-  //Users? usuario;
   //UserRepository usuario;
   HomePage();
 
@@ -41,7 +41,9 @@ class _HomePageState extends State<HomePage> {
   openDetails(Pet pet) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => PetDetailsPage(pet: pet),
+        builder: (_) => PetDetailsPage(
+          pet: pet,
+        ),
       ),
     );
   }

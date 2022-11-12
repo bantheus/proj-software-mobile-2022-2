@@ -1,15 +1,25 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miaudote/models/pet.dart';
+import 'package:miaudote/models/users.dart';
 import 'package:miaudote/repositories/pet_repository.dart';
-import 'package:miaudote/screens/cadastro_pet_screen.dart';
 import 'package:miaudote/services/auth_service.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class PetDetailsPage extends StatefulWidget {
   final Pet pet;
 
-  const PetDetailsPage({super.key, required this.pet});
+  const PetDetailsPage({
+    Key? key,
+    required this.pet,
+  }) : super(key: key);
 
   @override
   State<PetDetailsPage> createState() => _PetDetailsPageState();
@@ -41,6 +51,15 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
         onPressed: () {},
       ),
     );
+  }
+
+  openWhatsApp({nome, pet}) async {
+    var number = "5515996916596";
+    var whatsappUrl =
+        "https://wa.me/$number?text=Olá, me chamo $nome e gostaria de adotar o pet $pet";
+    await launch(whatsappUrl)
+        ? launch(whatsappUrl)
+        : print("Não foi possível abrir o WhatsApp");
   }
 
   @override
@@ -210,10 +229,12 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                           TextButton(
                             onPressed: () {
                               alterarStatus();
+                              openWhatsApp(
+                                  nome: 'userName', pet: widget.pet.nome);
                             },
                             style: TextButton.styleFrom(
-                              foregroundColor: Colors.white,
                               backgroundColor: Colors.indigo,
+                              primary: Colors.white,
                               minimumSize: const Size(500, 50),
                             ),
                             child: const Text(
