@@ -84,13 +84,12 @@ Os usuários se cadastram na plataforma e conseguem visualizar os animais dispon
 
 Para as próximas entregas, pretende-se implementar:
 
-- Tela de cadastro de animal;
+- Melhorias na tela de cadastro dos animais;
 - Tela de edição de animal;
-- Telas de listagem de animais por tipo;
-- Perfil do usuário;
+- Melhorias no perfil do usuário;
 - Tooltip para os campos de formulário com informações sobre o que deve ser preenchido;
-- Integração com o banco de dados;
-- Integração com Firebase;
+- Integração com o sistema nativo (Camera)
+- Envio de mensagens pelo Whatsapp
 
 ## Requisitos
 
