@@ -21,6 +21,12 @@ Os usuários se cadastram na plataforma e conseguem visualizar os animais dispon
 | 19/09/2022 | Desenvolvimento da tela de animais            |
 | 23/09/2022 | Desenvolvimento da tela de detalhes do animal |
 | 30/09/2022 | Refatoração do código                         |
+| 12/10/2022 | Integração com Firebase para Autenticação dos Usuários |
+| 18/10/2022 | Integração do Banco de Dados Firestore do Firebase |
+| 29/10/2022 | Desenvolvimento da Tela de Perfil do Usuário e atualização Endereço |
+| 04/11/2022 | Desenvolvimento da Tela de Relatório com gráfico da quantidade de animais cadastrados por mês |
+| 07/11/2022 | Desenvolvimento do Filtro de Animais na Home |
+| 09/11/2022 | Atualizações Layout |
 
 ## Equipe
 
@@ -34,6 +40,11 @@ Os usuários se cadastram na plataforma e conseguem visualizar os animais dispon
 
   - Desenvolvimento do login
   - Desenvolvimento do cadastro
+  - Desenvolvimento do login
+  - Desenvolvimento do cadastro
+  - Integração com Firebase para Autenticação dos Usuários
+  - Integração do Banco de Dados Firestore do Firebase
+  - Desenvolvimento da Tela de Perfil do Usuário e atualização Endereço
 
 - Matheus Augusto Schmidt Bento - 2065436
 
@@ -56,6 +67,12 @@ Os usuários se cadastram na plataforma e conseguem visualizar os animais dispon
 - :heavy_check_mark: Tela de detalhes de um animal
 
 ### Parte 2
+
+- :heavy_check_mark: Banco de Dados
+- :heavy_check_mark: Autenticação dos Usuários
+- :heavy_check_mark: Tela de perfil do usuário
+- :heavy_check_mark: Tela de relatórios
+- :heavy_check_mark: Tela de cadastro de animais
 
 ### Parte 3
 
