@@ -13,6 +13,8 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../repositories/user_repository.dart';
+
 class PetDetailsPage extends StatefulWidget {
   final Pet pet;
 
@@ -26,11 +28,37 @@ class PetDetailsPage extends StatefulWidget {
 }
 
 class _PetDetailsPageState extends State<PetDetailsPage> {
+  List<String> tutores = [];
+
+  late UserRepository repositorioUsers;
+
   bool loading = false; //feedback enquanto carrega
-  alterarStatus() async {
+  final ValueNotifier<bool> searching = ValueNotifier(false);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getUsers();
+  }
+
+  getUsers() async {
     try {
+      searching.value = true;
+      tutores = await context.read<UserRepository>().readUsers();
+      if (tutores != null && mounted) {
+        searching.value = false;
+      }
+    } on Exception catch (e) {
+      searching.value = false;
+      ScaffoldMessenger.of(context).showSnackBar(feedbackSnackbar(text: e));
+    }
+  }
+
+  alterarStatus(String newTutor) async {
+    try {
+      print(newTutor);
       setState(() => loading = true);
-      await context.read<PetRepository>().changeStatus(widget.pet.id);
+      await context.read<PetRepository>().changeStatus(widget.pet.id, newTutor);
       setState(() => loading = false);
       ScaffoldMessenger.of(context)
           .showSnackBar(feedbackSnackbar(text: "Pet adotado com sucesso"));
@@ -64,6 +92,7 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    String selectedTutor = widget.pet.tutor;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -82,164 +111,216 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
       ),
-      body: Stack(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: Image.asset(
-              widget.pet.imagem,
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.topCenter,
-            ),
-          ),
-          ListView(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 270),
-                padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+      body: ValueListenableBuilder(
+          valueListenable: searching,
+          builder: (context, bool isLoading, _) {
+            if (isLoading) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return Stack(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Image.asset(
+                    widget.pet.imagem,
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topCenter,
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                ListView(
                   children: [
-                    Center(
-                      child: Text(
-                        widget.pet.nome,
-                        style: const TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 270),
+                      padding: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      widget.pet.descricao,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        if (widget.pet.especie.toString().toLowerCase() ==
-                            'cachorro') ...[
-                          const FaIcon(
-                            FontAwesomeIcons.dog,
-                            color: Colors.orange,
-                          ),
-                          const SizedBox(width: 15),
-                          const Text(
-                            'Sou um cachorrinho',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Text(
+                              widget.pet.nome,
+                              style: const TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ] else ...[
-                          const FaIcon(
-                            FontAwesomeIcons.cat,
-                            color: Colors.orange,
-                          ),
-                          const SizedBox(width: 15),
-                          const Text(
-                            'Eu sou um gatinho',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        if (widget.pet.idade == 1) ...[
-                          const FaIcon(
-                            FontAwesomeIcons.cakeCandles,
-                            color: Colors.green,
-                          ),
-                          const SizedBox(width: 20),
-                          const Text(
-                            '1 ano',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ] else ...[
-                          const FaIcon(
-                            FontAwesomeIcons.cakeCandles,
-                            color: Colors.green,
-                          ),
-                          const SizedBox(width: 20),
+                          const SizedBox(height: 10),
                           Text(
-                            "Tenho ${widget.pet.idade} anos",
+                            widget.pet.descricao,
                             style: const TextStyle(
                               fontSize: 20,
                               color: Colors.grey,
                             ),
                           ),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        if (widget.pet.sexo.toString() == 'macho') ...[
-                          const FaIcon(
-                            FontAwesomeIcons.mars,
-                            color: Colors.blue,
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              const SizedBox(width: 10),
+                              if (widget.pet.especie.toString().toLowerCase() ==
+                                  'cachorro') ...[
+                                const FaIcon(
+                                  FontAwesomeIcons.dog,
+                                  color: Colors.orange,
+                                ),
+                                const SizedBox(width: 15),
+                                const Text(
+                                  'Sou um cachorrinho',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ] else ...[
+                                const FaIcon(
+                                  FontAwesomeIcons.cat,
+                                  color: Colors.orange,
+                                ),
+                                const SizedBox(width: 15),
+                                const Text(
+                                  'Eu sou um gatinho',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
-                          const SizedBox(width: 20),
-                          const Text(
-                            'e sou macho',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey,
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              const SizedBox(width: 10),
+                              if (widget.pet.idade == 1) ...[
+                                const FaIcon(
+                                  FontAwesomeIcons.cakeCandles,
+                                  color: Colors.green,
+                                ),
+                                const SizedBox(width: 20),
+                                const Text(
+                                  '1 ano',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ] else ...[
+                                const FaIcon(
+                                  FontAwesomeIcons.cakeCandles,
+                                  color: Colors.green,
+                                ),
+                                const SizedBox(width: 20),
+                                Text(
+                                  "Tenho ${widget.pet.idade} anos",
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              const SizedBox(width: 10),
+                              if (widget.pet.sexo.toString() == 'macho') ...[
+                                const FaIcon(
+                                  FontAwesomeIcons.mars,
+                                  color: Colors.blue,
+                                ),
+                                const SizedBox(width: 20),
+                                const Text(
+                                  'Sou macho',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ] else ...[
+                                const FaIcon(
+                                  FontAwesomeIcons.venus,
+                                  color: Colors.pink,
+                                ),
+                                const SizedBox(width: 20),
+                                const Text(
+                                  'e sou fêmea',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Row(children: [
+                            const SizedBox(width: 10),
+                            const FaIcon(
+                              FontAwesomeIcons.user,
+                              color: Colors.pink,
                             ),
-                          ),
-                        ] else ...[
-                          const FaIcon(
-                            FontAwesomeIcons.venus,
-                            color: Colors.pink,
-                          ),
-                          const SizedBox(width: 20),
-                          const Text(
-                            'e sou fêmea',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey,
+                            const SizedBox(width: 20),
+                            const Text(
+                              'Meu tutor',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.grey,
+                              ),
                             ),
-                          ),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 50),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: ButtonBar(
-                        alignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              alterarStatus();
-                              openWhatsApp(
-                                  nome: 'userName', pet: widget.pet.nome);
-                            },
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.indigo,
-                              primary: Colors.white,
-                              minimumSize: const Size(500, 50),
+                            const SizedBox(width: 20),
+                            DropdownButton<String>(
+                              value: selectedTutor,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 20,
+                              elevation: 40,
+                              // underline: Container(),
+                              style: const TextStyle(
+                                  fontSize: 20, color: Colors.grey),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedTutor = newValue!;
+                                });
+                              },
+                              items: List.generate(
+                                tutores.length,
+                                (index) => DropdownMenuItem(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(tutores[index]),
+                                  ),
+                                  value: tutores[index],
+                                ),
+                              ),
                             ),
-                            child: const Text(
-                              "Adotar",
-                              style: TextStyle(fontSize: 20),
+                          ]),
+                          const SizedBox(height: 50),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: ButtonBar(
+                              alignment: MainAxisAlignment.center,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    alterarStatus(selectedTutor);
+                                    openWhatsApp(
+                                        nome: 'userName', pet: widget.pet.nome);
+                                  },
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.indigo,
+                                    primary: Colors.white,
+                                    minimumSize: const Size(500, 50),
+                                  ),
+                                  child: const Text(
+                                    "Adotar",
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -247,11 +328,9 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
+              ],
+            );
+          }),
     );
   }
 }

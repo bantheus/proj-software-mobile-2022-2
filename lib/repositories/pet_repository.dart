@@ -40,6 +40,7 @@ class PetRepository extends ChangeNotifier {
             idade: doc.get('idade'),
             dataEntrada: doc.get('dataEntrada'),
             dataAdocao: doc.get('dataAdocao'),
+            tutor: doc.get('tutor'),
             status: doc.get('status'));
 
         _pets.add(pet);
@@ -61,6 +62,7 @@ class PetRepository extends ChangeNotifier {
         'idade': pet.idade,
         'dataEntrada': pet.dataEntrada,
         'dataAdocao': pet.dataAdocao,
+        'tutor': pet.tutor,
         'status': pet.status
       });
       notifyListeners();
@@ -70,27 +72,64 @@ class PetRepository extends ChangeNotifier {
     }
   }
 
-  changeStatus(String id) async {
+  changeStatus(String id, String tutor) async {
     _pets[_pets.indexWhere((item) => item.id == id)].status = 1;
-    await db.collection('pets').doc(id).update({'status': 1});
+    await db.collection('pets').doc(id).update({'status': 1, 'tutor': tutor});
     notifyListeners();
   }
 
   getHistoricoPet() {
-    final entradas = SplayTreeMap<DateTime, double>();
+    final adocoes = SplayTreeMap<DateTime, double>();
 
     for (var pet in _pets) {
-      DateTime parseDt = DateTime.parse(pet.dataEntrada);
-      var newFormat = DateFormat("yyyy/MM/01");
-      String updatedDt = newFormat.format(parseDt);
-      DateTime data = DateFormat('yyyy/MM/dd').parse(updatedDt);
-      //"${parseDt.month}/${parseDt.year}";
-      if (!entradas.containsKey(data)) {
-        entradas[data] = 1;
-      } else {
-        entradas.update(data, (value) => value + 1);
+      if (pet.status == 1) {
+        DateTime parseDt = DateTime.parse(pet.dataAdocao);
+        var newFormat = DateFormat("yyyy/MM/01");
+        String updatedDt = newFormat.format(parseDt);
+        DateTime data = DateFormat('yyyy/MM/dd').parse(updatedDt);
+        //"${parseDt.month}/${parseDt.year}";
+        if (!adocoes.containsKey(data)) {
+          adocoes[data] = 1;
+        } else {
+          adocoes.update(data, (value) => value + 1);
+        }
       }
     }
-    return entradas;
+
+    return adocoes;
+  }
+
+  List<List<String>> getReportAdoptions(String year) {
+    List<List<String>> data = [];
+
+    var newFormat = DateFormat("yyyy/MM/dd");
+
+    data.add(['Data', 'Tutor', 'Pet', 'Data Entrada', 'Sexo', 'Idade']);
+    for (var pet in _pets) {
+      DateTime parseDtEntr = DateTime.parse(pet.dataEntrada);
+      DateTime parseDtAdoc = DateTime.parse(pet.dataAdocao);
+      if ((pet.status == 1) & (parseDtAdoc.year.toString() == year)) {
+        data.add([
+          newFormat.format(parseDtAdoc),
+          pet.tutor,
+          pet.nome,
+          newFormat.format(parseDtEntr),
+          pet.sexo,
+          pet.idade.toString()
+        ]);
+      }
+    }
+    return data;
+  }
+
+  List<String> getYearsAdoptions() {
+    List<String> years = [];
+    for (var pet in _pets) {
+      DateTime data = DateTime.parse(pet.dataAdocao);
+      if ((!years.contains(data.year.toString())) & (pet.status == 1)) {
+        years.add(data.year.toString());
+      }
+    }
+    return years;
   }
 }
