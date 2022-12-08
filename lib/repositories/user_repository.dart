@@ -15,7 +15,7 @@ class UserRepository extends ChangeNotifier {
   late Users user;
   List<Users> _users = [];
 
-  UnmodifiableListView<Users> get pets => UnmodifiableListView<Users>(_users);
+  UnmodifiableListView<Users> get users => UnmodifiableListView<Users>(_users);
 
   // UnmodifiableListView<User> get users => UnmodifiableListView<User>(_users);
 

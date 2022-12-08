@@ -21,6 +21,6 @@ class Pet {
       required this.idade,
       required this.dataEntrada,
       required this.dataAdocao,
-      required this.status,
+      this.status = 0,
       this.tutor = 'ong'});
 }

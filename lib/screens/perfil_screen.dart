@@ -84,7 +84,7 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   _escolha(BuildContext context) {
-    final usuario = Provider.of<UserRepository>(context, listen: false);
+    //final usuario = Provider.of<UserRepository>(context, listen: false);
     return showDialog(
         context: context,
         builder: (BuildContext context) {

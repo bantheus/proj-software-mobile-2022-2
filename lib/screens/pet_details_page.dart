@@ -34,11 +34,29 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
 
   bool loading = false; //feedback enquanto carrega
   final ValueNotifier<bool> searching = ValueNotifier(false);
+  String selectedTutor = "ong";
+  final ValueNotifier<bool> load = ValueNotifier(false);
+  late Users user;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    getUser();
     getUsers();
+    selectedTutor = widget.pet.tutor;
+  }
+
+  getUser() async {
+    try {
+      load.value = true;
+      user = await context.read<UserRepository>().findUser();
+      if (user != null && mounted) {
+        load.value = false;
+      }
+    } on Exception catch (e) {
+      load.value = false;
+      ScaffoldMessenger.of(context).showSnackBar(feedbackSnackbar(text: e));
+    }
   }
 
   getUsers() async {
@@ -92,7 +110,9 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    String selectedTutor = widget.pet.tutor;
+    //String selectedTutor = widget.pet.tutor;
+    AuthService auth = Provider.of<AuthService>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -258,46 +278,48 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                             ],
                           ),
                           const SizedBox(height: 20),
-                          Row(children: [
-                            const SizedBox(width: 10),
-                            const FaIcon(
-                              FontAwesomeIcons.user,
-                              color: Colors.pink,
-                            ),
-                            const SizedBox(width: 20),
-                            const Text(
-                              'Meu tutor',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            DropdownButton<String>(
-                              value: selectedTutor,
-                              icon: const Icon(Icons.arrow_drop_down),
-                              iconSize: 20,
-                              elevation: 40,
-                              // underline: Container(),
-                              style: const TextStyle(
-                                  fontSize: 20, color: Colors.grey),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedTutor = newValue!;
-                                });
-                              },
-                              items: List.generate(
-                                tutores.length,
-                                (index) => DropdownMenuItem(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(tutores[index]),
+                          auth.usuario?.email != "admin@admin.com"
+                              ? Container()
+                              : Row(children: [
+                                  const SizedBox(width: 10),
+                                  const FaIcon(
+                                    FontAwesomeIcons.user,
+                                    color: Colors.pink,
                                   ),
-                                  value: tutores[index],
-                                ),
-                              ),
-                            ),
-                          ]),
+                                  const SizedBox(width: 20),
+                                  const Text(
+                                    'Meu tutor',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  DropdownButton<String>(
+                                    value: selectedTutor,
+                                    icon: const Icon(Icons.arrow_drop_down),
+                                    iconSize: 20,
+                                    elevation: 40,
+                                    // underline: Container(),
+                                    style: const TextStyle(
+                                        fontSize: 20, color: Colors.grey),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        selectedTutor = newValue!;
+                                      });
+                                    },
+                                    items: List.generate(
+                                      tutores.length,
+                                      (index) => DropdownMenuItem(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(tutores[index]),
+                                        ),
+                                        value: tutores[index],
+                                      ),
+                                    ),
+                                  ),
+                                ]),
                           const SizedBox(height: 50),
                           Align(
                             alignment: Alignment.bottomCenter,
@@ -306,17 +328,21 @@ class _PetDetailsPageState extends State<PetDetailsPage> {
                               children: [
                                 TextButton(
                                   onPressed: () {
-                                    alterarStatus(selectedTutor);
-                                    openWhatsApp(
-                                        nome: 'userName', pet: widget.pet.nome);
+                                    auth.usuario?.email == 'admin@admin.com'
+                                        ? alterarStatus(selectedTutor)
+                                        : openWhatsApp(
+                                            nome: user.nome,
+                                            pet: widget.pet.nome);
                                   },
                                   style: TextButton.styleFrom(
                                     backgroundColor: Colors.indigo,
                                     primary: Colors.white,
                                     minimumSize: const Size(500, 50),
                                   ),
-                                  child: const Text(
-                                    "Adotar",
+                                  child: Text(
+                                    auth.usuario?.email != 'admin@admin.com'
+                                        ? "Adotar"
+                                        : "Adotado",
                                     style: TextStyle(fontSize: 20),
                                   ),
                                 ),

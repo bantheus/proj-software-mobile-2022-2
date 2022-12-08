@@ -23,6 +23,17 @@ class PetRepository extends ChangeNotifier {
 
   _startFirestore() {
     db = DBFirestore.get();
+    //FirebaseFirestore.instance;
+    //DBFirestore.get();
+    //FirebaseFirestore.instance;
+    //db.useEmulator('localhost', 8080);
+
+    // FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+    //     .setPersistenceEnabled(false)
+    //     .build();
+    // db.setFirestoreSettings(settings);
+
+    //DBFirestore.get();
   }
 
   readPets() async {
@@ -74,7 +85,8 @@ class PetRepository extends ChangeNotifier {
 
   changeStatus(String id, String tutor) async {
     _pets[_pets.indexWhere((item) => item.id == id)].status = 1;
-    await db.collection('pets').doc(id).update({'status': 1, 'tutor': tutor});
+    await db.collection('pets').doc(id).update(
+        {'status': 1, 'tutor': tutor, 'dataAdocao': DateTime.now().toString()});
     notifyListeners();
   }
 
