@@ -10,6 +10,8 @@ import 'package:email_validator/email_validator.dart';
 import '../repositories/user_repository.dart';
 import '../services/auth_service.dart';
 import '../widgets/auth_check.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class EnderecoPage extends StatefulWidget {
   EnderecoPage();
@@ -26,6 +28,7 @@ class _EnderecoPageState extends State<EnderecoPage> {
   final _numero = TextEditingController();
 
   bool loading = false; //feedback enquanto carrega
+  bool searching = false;
 
   atualizar() async {
     try {
@@ -70,6 +73,35 @@ class _EnderecoPageState extends State<EnderecoPage> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController txtcep = new TextEditingController();
+
+    consultaCep() async {
+      try {
+        setState(() => searching = true);
+        String cep = txtcep.text;
+        String url = "https://viacep.com.br/ws/${cep}/json/";
+
+        http.Response response;
+
+        response = await http.get(Uri.parse(url));
+        Map<String, dynamic> retorno = json.decode(response.body);
+        String estado = retorno["uf"];
+        String cidade = retorno["localidade"];
+        String rua = retorno["logradouro"];
+
+        setState(() {
+          _cidade.text = cidade;
+          _estado.text = estado;
+          _rua.text = rua;
+        });
+
+        setState(() => searching = false);
+      } on Exception catch (e) {
+        setState(() => searching = false);
+        ScaffoldMessenger.of(context).showSnackBar(feedbackSnackbar(text: e));
+      }
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -107,6 +139,69 @@ class _EnderecoPageState extends State<EnderecoPage> {
                     ),
                     const SizedBox(
                       height: 30,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Digite o Cep ex: 1833400",
+                      ),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      controller: txtcep,
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    SizedBox(
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () => consultaCep(),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.indigo),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: (searching)
+                              ? [
+                                  const Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: SizedBox(
+                                      //width: double.infinity,
+                                      //height: 24,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                ]
+                              : [
+                                  const Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      "Buscar",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ),
+                                ],
+                        ),
+                      ),
                     ),
                   ],
                 ),

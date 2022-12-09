@@ -23,7 +23,7 @@ class _CadastroPetPageState extends State<CadastroPetPage> {
   final _descricao = TextEditingController();
   final _sexo = TextEditingController();
   final _idade = TextEditingController();
-  final _status = TextEditingController();
+  //final _status = TextEditingController();
 
   bool loading = false; //feedback enquanto carrega
   Random random = Random();
@@ -41,9 +41,9 @@ class _CadastroPetPageState extends State<CadastroPetPage> {
           sexo: _sexo.text,
           especie: _especie.text,
           idade: int.parse(_idade.text),
+          //status: int.parse(_status.text),
           dataAdocao: "3000-10-12",
-          dataEntrada: DateTime.now().toString(),
-          status: int.parse(_status.text)));
+          dataEntrada: DateTime.now().toString()));
       setState(() => loading = false);
 
       if (success && mounted) {
@@ -226,28 +226,28 @@ class _CadastroPetPageState extends State<CadastroPetPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      //nome
-                      TextFormField(
-                        controller: _status,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 20.0),
-                          labelText: "Status",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Informe situação';
-                          }
-                          return null;
-                        }, //imput
-                      ),
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
+                      // //nome
+                      // TextFormField(
+                      //   controller: _status,
+                      //   keyboardType: TextInputType.number,
+                      //   decoration: InputDecoration(
+                      //     contentPadding:
+                      //         const EdgeInsets.symmetric(horizontal: 20.0),
+                      //     labelText: "Status",
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(10),
+                      //     ),
+                      //   ),
+                      //   validator: (value) {
+                      //     if (value!.isEmpty) {
+                      //       return 'Informe situação';
+                      //     }
+                      //     return null;
+                      //   }, //imput
+                      // ),
                       const SizedBox(
                         height: 20,
                       ),

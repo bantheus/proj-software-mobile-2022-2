@@ -8,18 +8,19 @@ class Pet {
   int idade;
   String dataEntrada;
   String dataAdocao;
+  String tutor;
   int status;
 
-  Pet({
-    required this.id,
-    required this.nome,
-    required this.imagem,
-    required this.descricao,
-    required this.sexo,
-    required this.especie,
-    required this.idade,
-    required this.dataEntrada,
-    required this.dataAdocao,
-    required this.status
-  });
+  Pet(
+      {required this.id,
+      required this.nome,
+      required this.imagem,
+      required this.descricao,
+      required this.sexo,
+      required this.especie,
+      required this.idade,
+      required this.dataEntrada,
+      required this.dataAdocao,
+      this.status = 0,
+      this.tutor = 'ong'});
 }

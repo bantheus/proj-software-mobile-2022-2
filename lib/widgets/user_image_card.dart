@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:miaudote/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
-class PetImageCard extends StatelessWidget {
+class UserImageCard extends StatelessWidget {
   final String image;
   final String nome;
-  final String idade;
+  final String email;
   final VoidCallback onTap;
-  const PetImageCard(
+  const UserImageCard(
       {super.key,
       required this.image,
       required this.nome,
-      required this.idade,
+      required this.email,
       required this.onTap});
 
   @override
@@ -29,7 +29,7 @@ class PetImageCard extends StatelessWidget {
             children: [
               Ink.image(
                 image: AssetImage(image),
-                height: 240,
+                height: 200,
                 fit: BoxFit.cover,
               ),
             ],
@@ -42,12 +42,11 @@ class PetImageCard extends StatelessWidget {
                   nome,
                   style: const TextStyle(fontSize: 30),
                 ),
-                int.parse(idade) > 1 ? Text("$idade ANOS") : Text("$idade ANO"),
               ],
             ),
           ),
           Align(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.bottomCenter,
             child: ButtonBar(
               alignment: MainAxisAlignment.end,
               children: [
@@ -57,9 +56,7 @@ class PetImageCard extends StatelessWidget {
                     backgroundColor: Colors.indigo,
                     primary: Colors.white,
                   ),
-                  child: Text(auth.usuario?.email == 'admin@admin.com'
-                      ? 'Editar'
-                      : 'Mais informações'),
+                  child: Text('Desabilitar'),
                 ),
               ],
             ),

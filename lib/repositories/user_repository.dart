@@ -13,6 +13,9 @@ class UserRepository extends ChangeNotifier {
   late FirebaseFirestore db;
   late AuthService auth;
   late Users user;
+  List<Users> _users = [];
+
+  UnmodifiableListView<Users> get users => UnmodifiableListView<Users>(_users);
 
   // UnmodifiableListView<User> get users => UnmodifiableListView<User>(_users);
 
@@ -59,6 +62,24 @@ class UserRepository extends ChangeNotifier {
       return null;
     }
     return null;
+  }
+
+  readUsers() async {
+    List<String> tutores = [];
+
+    final snapshot = await db.collection('usuarios').get();
+
+    snapshot.docs.forEach((doc) {
+      final user = Users(
+          nome: doc.get('nome'),
+          email: doc.get('email'),
+          celular: doc.get('celular'));
+
+      _users.add(user);
+      tutores.add(doc.get('nome'));
+      notifyListeners();
+    });
+    return tutores;
   }
 
   loadUser() async {

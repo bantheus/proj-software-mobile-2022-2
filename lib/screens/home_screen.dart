@@ -8,9 +8,11 @@ import 'package:miaudote/models/pet.dart';
 import 'package:miaudote/repositories/pet_repository.dart';
 import 'package:miaudote/repositories/user_repository.dart';
 import 'package:miaudote/screens/cadastro_pet_screen.dart';
+import 'package:miaudote/screens/favoritos_screen.dart';
 import 'package:miaudote/screens/perfil_screen.dart';
 import 'package:miaudote/screens/pet_details_page.dart';
 import 'package:miaudote/screens/report_screen.dart';
+import 'package:miaudote/screens/users_screen.dart';
 import 'package:miaudote/widgets/pet_grid_view.dart';
 import 'package:miaudote/widgets/pet_image_card.dart';
 import 'package:provider/provider.dart';
@@ -59,6 +61,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    AuthService auth = Provider.of<AuthService>(context);
+
     double iconSize = 40.0;
     final activeDog = SizedBox(
       height: iconSize,
@@ -152,7 +156,10 @@ class _HomePageState extends State<HomePage> {
                       show
                           ? repository.pets
                               .where((pet) =>
-                                  pet.especie == "cachorro" && pet.status != 1)
+                                  pet.especie == "cachorro" &&
+                                  (auth.usuario?.email != 'admin@admin.com'
+                                      ? pet.status == 0
+                                      : pet.status != 2))
                               .map(
                                 (Pet pet) => PetImageCard(
                                   image: pet.imagem,
@@ -165,7 +172,10 @@ class _HomePageState extends State<HomePage> {
                               )
                           : repository.pets
                               .where((pet) =>
-                                  pet.especie == "gato" && pet.status != 1)
+                                  pet.especie == "gato" &&
+                                  (auth.usuario?.email != 'admin@admin.com'
+                                      ? pet.status == 0
+                                      : pet.status != 2))
                               .map(
                                 (Pet pet) => PetImageCard(
                                   image: pet.imagem,
@@ -205,13 +215,18 @@ class _HomePageState extends State<HomePage> {
               // ),
               // //const SizedBox(width: 48),
               IconButton(
-                icon: const Icon(Icons.multiline_chart),
+                icon: auth.usuario?.email == 'admin@admin.com'
+                    ? const Icon(Icons.multiline_chart)
+                    : const Icon(Icons.favorite),
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           //usuario: widget.usuario
-                          builder: (_) => ReportPage()));
+                          builder: (_) =>
+                              auth.usuario?.email == 'admin@admin.com'
+                                  ? ReportPage()
+                                  : FavoritosPage()));
                 },
               ),
               IconButton(
@@ -221,7 +236,9 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                         //usuario: widget.usuario
-                        builder: (_) => PerfilPage()),
+                        builder: (_) => auth.usuario?.email == 'admin@admin.com'
+                            ? UsersPage()
+                            : PerfilPage()),
                   );
                 },
               ),
@@ -229,12 +246,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          openPetRegister();
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: auth.usuario?.email != 'admin@admin.com'
+          ? Container()
+          : FloatingActionButton(
+              onPressed: () {
+                openPetRegister();
+              },
+              child: const Icon(Icons.add),
+            ),
     );
   }
 }

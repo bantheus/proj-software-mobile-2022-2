@@ -1,9 +1,11 @@
-import 'dart:collection';
+import 'dart:io';
+import 'package:csv/csv.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../repositories/pet_repository.dart';
@@ -18,11 +20,15 @@ class ReportPage extends StatefulWidget {
 enum Periodo { atual, historico }
 
 class _ReportPageState extends State<ReportPage> {
+  bool loading = false; //feedback enquanto carrega
+  List<String> years = [];
+
   List<Color> cores = [
     Color(0xFF3F51B5),
   ];
   Periodo periodo = Periodo.atual;
   Map historico = {};
+  Map dadosPeriodo = {};
   List datas = [];
   List<FlSpot> dadosGrafico = [];
   double maxX = 0;
@@ -30,6 +36,35 @@ class _ReportPageState extends State<ReportPage> {
   double minY = 0;
   ValueNotifier<bool> loaded = ValueNotifier(false);
   late PetRepository repositorio;
+
+  generateCsv(String year) async {
+    setState(() => loading = true);
+    print(year);
+    List<List<String>> data = repositorio.getReportAdoptions(year);
+    String csv = ListToCsvConverter().convert(data);
+
+    var file = File('');
+    var status = await Permission.storage.status;
+    if (status != PermissionStatus.granted) {
+      status = await Permission.storage.request();
+    }
+    if (status.isGranted) {
+      const downloadsFolderPath = '/storage/emulated/0/Download/';
+      Directory dir = Directory(downloadsFolderPath);
+      file = File('${dir.path}/relatorioAdocao$year.csv');
+      try {
+        file.writeAsString(csv);
+        setState(() => loading = false);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(feedbackSnackbar(text: "Dowload finalizado"));
+      } on FileSystemException catch (e) {
+        setState(() => loading = false);
+        ScaffoldMessenger.of(context).showSnackBar(feedbackSnackbar(text: e));
+
+        // handle error
+      }
+    }
+  }
 
   setDados() async {
     loaded.value = false;
@@ -39,22 +74,31 @@ class _ReportPageState extends State<ReportPage> {
     if (historico.isEmpty) {
       historico = repositorio.getHistoricoPet();
     }
+
+    if (periodo.name == 'atual') {
+      dadosPeriodo = new Map.fromIterable(
+          historico.keys.where((k) => k.year == DateTime.now().year),
+          key: (k) => k,
+          value: (k) => historico[k]);
+    } else {
+      dadosPeriodo = historico;
+    }
     //dados selecionados em uma lista e formata data
     //limites
-    maxX = historico.length.toDouble();
+    maxX = dadosPeriodo.length.toDouble();
     maxY = 0;
     minY = double.infinity;
 
-    for (var value in historico.values) {
+    for (var value in dadosPeriodo.values) {
       maxY = value > maxY ? value : maxY;
       minY = value < minY ? value : minY;
     }
     //passar para array do FlSpot
     var i = 0;
-    for (var key in historico.keys) {
+    for (var key in dadosPeriodo.keys) {
       dadosGrafico.add(FlSpot(
           i.toDouble(), //indice
-          historico[key]));
+          dadosPeriodo[key]));
       datas.add(key);
       i = i + 1;
     }
@@ -136,9 +180,23 @@ class _ReportPageState extends State<ReportPage> {
     );
   }
 
+  feedbackSnackbar({text}) {
+    return SnackBar(
+      //behavior: SnackBarBehavior.floating,
+      content: Text(text),
+      duration: Duration(milliseconds: 3000),
+      action: SnackBarAction(
+        label: 'OK',
+        onPressed: () {},
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     repositorio = context.read<PetRepository>();
+    years = repositorio.getYearsAdoptions();
+    String selectedYear = years[0];
 
     setDados();
     return Scaffold(
@@ -211,7 +269,77 @@ class _ReportPageState extends State<ReportPage> {
                     ],
                   ),
                 ),
-              )
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              Row(
+                children: [
+                  DropdownButton<String>(
+                    value: selectedYear,
+                    icon: const Icon(Icons.arrow_circle_down),
+                    iconSize: 20,
+                    elevation: 40,
+                    // underline: Container(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedYear = newValue!;
+                      });
+                    },
+                    items: List.generate(
+                      years.length,
+                      (index) => DropdownMenuItem(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(years[index]),
+                        ),
+                        value: years[index],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 40),
+                  SizedBox(
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () => generateCsv(selectedYear),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.indigo),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: (loading)
+                            ? [
+                                const Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: SizedBox(
+                                    //width: double.infinity,
+                                    //height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                )
+                              ]
+                            : [
+                                const Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Text(
+                                    "Dowload",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ])));
   }
 }
